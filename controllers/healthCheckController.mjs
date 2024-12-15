@@ -23,7 +23,7 @@ export async function checkServers() {
                 server.active = false;
                 server.reason = `Status code: ${response.status}`;
                 await server.save();
-                console.log(`Статус, ебать его, ${server.address} is not available: ${error.message}`);
+                console.log(`Статус, ебать его, ${server.address} is not available: ${error.message}\naddress: ${response}`);
             }
         } catch (error) {
             // Сервер недоступен
