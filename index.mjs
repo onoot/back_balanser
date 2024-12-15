@@ -43,19 +43,6 @@ const sslOptions = {
     cert: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.crt'),
 };
 
-const HTTPS_PORT = process.env.HTTPS_PORT || 443;
-https.createServer(sslOptions, app).listen(HTTPS_PORT, () => {
-    console.log(`HTTPS Server started on port ${HTTPS_PORT}`);
-});
-
-const HTTP_PORT = process.env.HTTP_PORT || 80;
-http.createServer((req, res) => {
-    res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
-    res.end();
-}).listen(HTTP_PORT, () => {
-    console.log(`HTTP Server started on port ${HTTP_PORT} and redirecting to HTTPS`);
-});
-
 // Запускаем опрос серверов
 startHealthCheck();
 
@@ -114,3 +101,17 @@ bot.on('message', async (msg) => {
 // http.createServer(app).listen(HTTP_PORT, () => {
 //         console.log(`HTTP Server started on port ${HTTP_PORT}`);
 //     });
+
+
+const HTTPS_PORT = process.env.HTTPS_PORT || 443;
+https.createServer(sslOptions, app).listen(HTTPS_PORT, () => {
+    console.log(`HTTPS Server started on port ${HTTPS_PORT}`);
+});
+
+const HTTP_PORT = process.env.HTTP_PORT || 80;
+http.createServer((req, res) => {
+    res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+    res.end();
+}).listen(HTTP_PORT, () => {
+    console.log(`HTTP Server started on port ${HTTP_PORT} and redirecting to HTTPS`);
+});
