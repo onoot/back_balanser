@@ -10,7 +10,7 @@ export async function checkServers() {
 
     for (const server of servers) {
         try {
-            const response = await fetch(server.address+'/health', { timeout: 3000 });
+            const response = await fetch('http://'+server.address+'/health', { timeout: 3000 });
             if (response.ok) {
                 // Сервер доступен
                 if (!server.active) {
