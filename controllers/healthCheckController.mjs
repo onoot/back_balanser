@@ -28,6 +28,7 @@ export async function checkServers() {
             // Сервер недоступен
             server.active = false;
             server.reason = error.message;
+            console.log(`Server ${server.address} is not available: ${error.message}`);
             await server.save();
         }
     }
