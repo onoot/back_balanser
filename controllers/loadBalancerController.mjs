@@ -18,37 +18,28 @@ export async function getAvailableServer() {
  * Балансировка запросов к API.
  * @param {Object} req - Запрос.
  * @param {Object} res - Ответ.
- * @param {Function} next - Следующий middleware.
  */
-export async function balanceRequest(req, res, next) {
+export async function balanceRequest(req, res) {
     try {
         const server = await getAvailableServer();
         const targetUrl = `http://${server.address}${req.url}`;
 
-        console.log(`Епта метод ${req.method} request to ${targetUrl}`);
-        // Копируем тело запроса (если требуется)
-        const body =
-            ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method.toUpperCase()) && req.body
-                ? JSON.stringify(req.body)
-                : undefined;
-
-        // Параметры запроса
+        // Настройки запроса для перенаправления
         const options = {
-            method: req.method,
+            method: req.method, // Переносим исходный HTTP-метод
             headers: {
-                ...req.headers,
-                'Content-Type': req.headers['content-type'] || 'application/json',
+                ...req.headers, // Переносим заголовки
+                host: new URL(targetUrl).host, // Изменяем хост
             },
-            body,
+            body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined,
         };
 
-        // Перенаправляем запрос
+        // Перенаправление запроса
         const response = await fetch(targetUrl, options);
 
-        // Читаем данные ответа
+        // Ответ от целевого сервера
         const responseData = await response.text();
 
-        // Отправляем ответ клиенту
         res.status(response.status).send(responseData);
         console.log(`Forwarded ${req.method} request to ${targetUrl} with status ${response.status}`);
     } catch (error) {
