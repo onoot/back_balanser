@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import Server from '../models/Server.mjs';
 
 /**
@@ -26,24 +26,21 @@ export async function balanceRequest(req, res) {
 
         // Настройки запроса для перенаправления
         const options = {
-            method: req.method, // Переносим исходный HTTP-метод
-            headers: {
-                ...req.headers, // Переносим заголовки
-                host: new URL(targetUrl).host, // Изменяем хост
-            },
-            body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined,
+            method: req.method,               // Метод запроса (POST, GET и т.д.)
+            url: targetUrl,                   // Целевой URL
+            headers: { ...req.headers },      // Копирование заголовков из оригинального запроса
+            data: req.body || undefined,     // Тело запроса для методов POST, PUT, PATCH
         };
 
         // Перенаправление запроса
-        const response = await fetch(targetUrl, options);
+        const response = await axios(options);
 
         // Ответ от целевого сервера
-        const responseData = await response.text();
-
-        res.status(response.status).send(responseData);
+        res.status(response.status).send(response.data);
         console.log(`Forwarded ${req.method} request to ${targetUrl} with status ${response.status}`);
     } catch (error) {
         console.error('Error forwarding request:', error.message);
-        res.status(500).send(`Unable to forward request: ${error.message}`);
+        const errorDetails = error.response ? error.response.data : error.message;
+        res.status(500).send(`Unable to forward request: ${errorDetails}`);
     }
 }
