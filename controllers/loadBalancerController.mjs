@@ -34,6 +34,7 @@ export async function balanceRequest(req, res, next) {
         const response = await fetch(targetUrl, options);
         const responseData = await response.text();
         res.status(response.status).send(responseData);
+        console.log(`Forwarded request to ${targetUrl} with status ${response.status}`);
     } catch (error) {
         console.error('Error forwarding request:', error.message, "\n"+test);
         res.status(500).send('Unable to forward request: ' + error.message+"\n"+test);
