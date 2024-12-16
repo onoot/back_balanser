@@ -24,7 +24,7 @@ export async function balanceRequest(req, res, next) {
     let test
     try {
         const server = await getAvailableServer();
-        const targetUrl = `http://${server.address}/${req.url}`;
+        const targetUrl = `http://${server.address}${req.url}`;
         const options = {
             method: req.method,
             headers: { ...req.headers },
