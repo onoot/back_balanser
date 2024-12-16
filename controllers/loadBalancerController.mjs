@@ -21,22 +21,26 @@ export async function getAvailableServer() {
  * @param {Function} next - Следующий middleware.
  */
 export async function balanceRequest(req, res, next) {
-    let test
     try {
         const server = await getAvailableServer();
         const targetUrl = `http://${server.address}${req.url}`;
+        
         const options = {
             method: req.method,
-            headers: { ...req.headers },
+            headers: {
+                ...req.headers,
+                'Content-Type': req.headers['content-type'] || 'application/json',
+            },
             body: ['POST', 'PUT', 'PATCH'].includes(req.method) ? JSON.stringify(req.body) : undefined,
         };
-        test=targetUrl
+
         const response = await fetch(targetUrl, options);
+
         const responseData = await response.text();
         res.status(response.status).send(responseData);
         console.log(`Forwarded request to ${targetUrl} with status ${response.status}`);
     } catch (error) {
-        console.error('Error forwarding request:', error.message, "\n"+test);
-        res.status(500).send('Unable to forward request: ' + error.message+"\n"+test);
+        console.error('Error forwarding request:', error.message);
+        res.status(500).send(`Unable to forward request: ${error.message}`);
     }
 }
