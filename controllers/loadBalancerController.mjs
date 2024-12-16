@@ -19,28 +19,41 @@ export async function getAvailableServer() {
  * @param {Object} req - Запрос.
  * @param {Object} res - Ответ.
  */
-export async function balanceRequest(req, res) {
+
+/**
+ * Балансировка запросов к API.
+ * @param {Object} req - Запрос.
+ * @param {Object} res - Ответ.
+ * @param {Function} next - Следующий middleware.
+ */
+export async function balanceRequest(req, res, next) {
     try {
-        const server = await getAvailableServer();
+        // Выбираем сервер
+        const server = getAvailableServer();
+        if (!server) {
+            res.status(503).send('No available servers');
+        }
+
         const targetUrl = `http://${server.address}${req.url}`;
 
-        // Настройки запроса для перенаправления
+        // Формируем запрос к целевому серверу
         const options = {
-            method: req.method,               // Метод запроса (POST, GET и т.д.)
-            url: targetUrl,                   // Целевой URL
-            headers: { ...req.headers },      // Копирование заголовков из оригинального запроса
-            data: req.body || undefined,     // Тело запроса для методов POST, PUT, PATCH
+            method: req.method,
+            url: targetUrl,
+            headers: { ...req.headers }, // Передаем заголовки
+            data: req.body || undefined, // Тело запроса
+            params: req.query || undefined, // Query-параметры
         };
 
-        // Перенаправление запроса
         const response = await axios(options);
 
-        // Ответ от целевого сервера
+        // Возвращаем ответ от целевого сервера
         res.status(response.status).send(response.data);
+
         console.log(`Forwarded ${req.method} request to ${targetUrl} with status ${response.status}`);
     } catch (error) {
         console.error('Error forwarding request:', error.message);
         const errorDetails = error.response ? error.response.data : error.message;
-        res.status(500).send(`Unable to forward request: ${errorDetails}`);
+        res.status(500).send(`Error forwarding request: ${errorDetails}`);
     }
 }
