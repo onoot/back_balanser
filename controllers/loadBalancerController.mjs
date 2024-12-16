@@ -1,3 +1,25 @@
+import axios from 'axios';
+import Server from '../models/Server.mjs';
+
+/**
+ * Выбор доступного сервера из списка.
+ * @async
+ * @returns {Promise<Object>} Данные о сервере.
+ */
+export async function getAvailableServer() {
+    const servers = await Server.findAll({ where: { active: true } });
+    if (servers.length === 0) {
+        throw new Error("No available servers");
+    }
+    return servers[Math.floor(Math.random() * servers.length)];
+}
+
+/**
+ * Балансировка запросов к API.
+ * @param {Object} req - Запрос.
+ * @param {Object} res - Ответ.
+ * @param {Function} next - Следующий middleware.
+ */
 export async function balanceRequest(req, res, next) {
     try {
         // Выбираем доступный сервер
