@@ -21,12 +21,13 @@ export async function getAvailableServer() {
  * @param {Function} next - Следующий middleware.
  */
 export async function balanceRequest(req, res, next) {
+    let targetUrl;
     try {
         // Выбираем доступный сервер
         const server = await getAvailableServer();
         console.log(`Selected server: ${server.address}`);
 
-        const targetUrl = `http://${server.address}${req.url}`;
+        targetUrl = `http://${server.address}${req.url}`;
         console.log(`Forwarding ${req.method} request to ${targetUrl}`);
 
         // Логируем дополнительные данные запроса
