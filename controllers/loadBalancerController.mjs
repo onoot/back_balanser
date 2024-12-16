@@ -18,23 +18,16 @@ export async function getAvailableServer() {
  * Балансировка запросов к API.
  * @param {Object} req - Запрос.
  * @param {Object} res - Ответ.
- */
-
-/**
- * Балансировка запросов к API.
- * @param {Object} req - Запрос.
- * @param {Object} res - Ответ.
  * @param {Function} next - Следующий middleware.
  */
 export async function balanceRequest(req, res, next) {
     try {
-        // Выбираем сервер
-        const server = getAvailableServer();
-        if (!server) {
-            res.status(503).send('No available servers');
-        }
+        // Выбираем доступный сервер
+        const server = await getAvailableServer();
+        console.log(`Selected server: ${server.address}`);
 
         const targetUrl = `http://${server.address}${req.url}`;
+        console.log(`Forwarding request to ${targetUrl}`);
 
         // Формируем запрос к целевому серверу
         const options = {
@@ -48,8 +41,7 @@ export async function balanceRequest(req, res, next) {
         const response = await axios(options);
 
         // Возвращаем ответ от целевого сервера
-        res.status(response.status).send(response.data);
-
+        res.status(response.status).send(response.data || null);
         console.log(`Forwarded ${req.method} request to ${targetUrl} with status ${response.status}`);
     } catch (error) {
         console.error('Error forwarding request:', error.message);
