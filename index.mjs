@@ -29,15 +29,6 @@ const __dirname = path.dirname(__filename);
 const buildPath = path.join(__dirname, 'build');
 app.use(express.static(buildPath));
 
-app.use((err, req, res, next) => {
-    if (err instanceof URIError) {
-        console.error("URIError detected: ", err.message);
-        res.status(400).send("Bad Request");
-    } else {
-        next(err);
-    }
-});
-
 const sslOptions = {
     key: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.key'),
     cert: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.crt'),
@@ -46,13 +37,27 @@ const sslOptions = {
 // Запускаем опрос серверов
 startHealthCheck();
 
-// Используем middleware для API
-app.use('/api', balanceRequest);
+app.use('/api', (req, res, next) => {
+  console.log(`[API Middleware] Path: ${req.path}`); // Лог для проверки маршрута
+  balanceRequest(req, res, next);
+});
 
 // Обработка всех остальных запросов
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, './public/ton.json'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/ton.json'));
+});
+
+// Обработка ошибок
+app.use((err, req, res, next) => {
+  if (err instanceof URIError) {
+      console.error("URIError detected: ", err.message);
+      res.status(400).send("Bad Request");
+  } else {
+      console.error("Unhandled error:", err.message);
+      res.status(500).send("Internal Server Error");
+  }
+});
+
 
 // (async () => {
 //     await syncDatabase();
