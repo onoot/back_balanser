@@ -1,25 +1,3 @@
-import axios from 'axios';
-import Server from '../models/Server.mjs';
-
-/**
- * Выбор доступного сервера из списка.
- * @async
- * @returns {Promise<Object>} Данные о сервере.
- */
-export async function getAvailableServer() {
-    const servers = await Server.findAll({ where: { active: true } });
-    if (servers.length === 0) {
-        throw new Error("No available servers");
-    }
-    return servers[Math.floor(Math.random() * servers.length)];
-}
-
-/**
- * Балансировка запросов к API.
- * @param {Object} req - Запрос.
- * @param {Object} res - Ответ.
- * @param {Function} next - Следующий middleware.
- */
 export async function balanceRequest(req, res, next) {
     try {
         // Выбираем доступный сервер
@@ -43,15 +21,21 @@ export async function balanceRequest(req, res, next) {
         // Возвращаем ответ от целевого сервера
         res.status(response.status).send(response.data || null);
         console.log(`Forwarded ${req.method} request to ${targetUrl} with status ${response.status}`);
-
-        // Вызываем следующий middleware
-        next();
     } catch (error) {
         console.error('Error forwarding request:', error.message);
+
+        if (res.headersSent) {
+            // Если заголовки уже отправлены, передаём ошибку дальше
+            return next(error);
+        }
+
+        // Если ошибка вызвана отсутствием ресурса (404)
+        if (error.response && error.response.status === 404) {
+            return res.status(404).send('Resource not found on target server.');
+        }
+
+        // Обработка других ошибок
         const errorDetails = error.response ? error.response.data : error.message;
         res.status(500).send(`Error forwarding request: ${errorDetails}`);
-
-        // Передаем ошибку дальше
-        next(error);
     }
 }
