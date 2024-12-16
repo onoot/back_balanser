@@ -43,9 +43,15 @@ export async function balanceRequest(req, res, next) {
         // Возвращаем ответ от целевого сервера
         res.status(response.status).send(response.data || null);
         console.log(`Forwarded ${req.method} request to ${targetUrl} with status ${response.status}`);
+
+        // Вызываем следующий middleware
+        next();
     } catch (error) {
         console.error('Error forwarding request:', error.message);
         const errorDetails = error.response ? error.response.data : error.message;
         res.status(500).send(`Error forwarding request: ${errorDetails}`);
+
+        // Передаем ошибку дальше
+        next(error);
     }
 }
