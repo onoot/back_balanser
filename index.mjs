@@ -37,9 +37,21 @@ const sslOptions = {
 // Запускаем опрос серверов
 startHealthCheck();
 
+// app.use('/api', (req, res, next) => {
+//   console.log(`[API Middleware] Path: ${req.path}`); // Лог для проверки маршрута
+//   // balanceRequest(req, res, next);
+// });
+
+// // Обработка всех остальных запросов
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, './public/ton.json'));
+// });
+
+
+
 app.use('/api', (req, res, next) => {
-  console.log(`[API Middleware] Path: ${req.path}`); // Лог для проверки маршрута
-  balanceRequest(req, res, next);
+  console.log(`[API Middleware] Method: ${req.method}, Path: ${req.path}`); // Логируем метод запроса и путь
+  next(); // Передаем управление дальше
 });
 
 // Обработка всех остальных запросов
