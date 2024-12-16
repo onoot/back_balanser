@@ -27,7 +27,12 @@ export async function balanceRequest(req, res, next) {
         console.log(`Selected server: ${server.address}`);
 
         const targetUrl = `http://${server.address}${req.url}`;
-        console.log(`Forwarding request to ${targetUrl}`);
+        console.log(`Forwarding ${req.method} request to ${targetUrl}`);
+
+        // Логируем дополнительные данные запроса
+        console.log(`Request body:`, req.body);
+        console.log(`Request query:`, req.query);
+        console.log(`Request headers:`, req.headers);
 
         // Формируем запрос к целевому серверу
         const options = {
@@ -40,11 +45,22 @@ export async function balanceRequest(req, res, next) {
 
         const response = await axios(options);
 
-        // Возвращаем ответ от целевого сервера
-        res.status(response.status).send(response.data || null);
+        // Логируем успешный ответ
         console.log(`Forwarded ${req.method} request to ${targetUrl} with status ${response.status}`);
+        
+        // Если сервер вернул HTML (например, 404 страница)
+        if (response.headers['content-type'] && response.headers['content-type'].includes('text/html')) {
+            res.status(response.status).send(response.data); // Отправляем HTML как есть
+        } else {
+            res.status(response.status).send(response.data || null);
+        }
     } catch (error) {
         console.error('Error forwarding request:', error.message);
+
+        // Логируем детали ошибки
+        if (error.response) {
+            console.error('Error response:', error.response);
+        }
 
         if (res.headersSent) {
             // Если заголовки уже отправлены, передаём ошибку дальше
@@ -53,6 +69,7 @@ export async function balanceRequest(req, res, next) {
 
         // Если ошибка вызвана отсутствием ресурса (404)
         if (error.response && error.response.status === 404) {
+            console.error(`Resource not found at ${targetUrl}`);
             return res.status(404).send('Resource not found on target server.');
         }
 
