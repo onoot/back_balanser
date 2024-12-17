@@ -1,6 +1,6 @@
 // models/User.mjs
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/database.mjs';
+import sequelize from '../database.mjs';
 import Role from './Role.mjs';
 
 const User = sequelize.define('User', {
