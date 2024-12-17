@@ -37,7 +37,7 @@ export async function balanceRequest(req, res, next) {
 
         // Формируем запрос к целевому серверу
         const options = {
-            method: req.method,
+            method: "POST",
             url: targetUrl,
             headers: { ...req.headers }, // Передаем заголовки
             data: req.body || undefined, // Тело запроса
@@ -48,13 +48,6 @@ export async function balanceRequest(req, res, next) {
 
         // Логируем успешный ответ
         console.log(`Forwarded ${req.method} request to ${targetUrl} with status ${response.status}`);
-        
-        // Если сервер вернул HTML (например, 404 страница)
-        if (response.headers['content-type'] && response.headers['content-type'].includes('text/html')) {
-            res.status(response.status).send(response.data); // Отправляем HTML как есть
-        } else {
-            res.status(response.status).send(response.data || null);
-        }
     } catch (error) {
         console.error('Error forwarding request:', error.message);
 
