@@ -37,7 +37,7 @@ export async function balanceRequest(req, res, next) {
 
         // Формируем запрос к целевому серверу
         const options = {
-            method: "POST",
+            method: req.method,
             url: targetUrl,
             headers: { ...req.headers }, // Передаем заголовки
             data: req.body || undefined, // Тело запроса
