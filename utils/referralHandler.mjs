@@ -19,7 +19,7 @@ export async function processReferral({ user, ref }) {
         firstName: user.first_name,
         lastName: user.last_name,
         name: user.username || 'Guest',
-        referral: ref || null, // Сохраняем ID реферера (если есть)
+        referral: ref , // Сохраняем ID реферера (если есть)
       });
     }
 
