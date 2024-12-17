@@ -49,7 +49,7 @@ startHealthCheck();
 
 
 
-app.use('/api', (req, res, next) => {
+app.all('/api', (req, res, next) => {
   console.log(`[API Middleware] Method: ${req.method}, Path: ${req.path}`); // Логируем метод запроса и путь
   next(); // Передаем управление дальше
 });
