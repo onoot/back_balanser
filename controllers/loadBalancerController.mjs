@@ -55,6 +55,6 @@ export async function balanceRequest(req, res, next) {
         }        
 
         // Ошибка при балансировке
-        res.status(500).send(`Error forwarding request: ${error.message}`);
+        res.status(500).send(`Error forwarding request: ${error}`);
     }
 }
