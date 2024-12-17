@@ -73,6 +73,13 @@ bot.on('message', async (msg) => {
 
     try {
       // Используем утилиту для обработки пользователя
+      if(ref==userId){
+        await bot.sendMessage(
+          chatId,
+          `🎉 Welcome to our T2E game! 🦘 Press "/start" to begin earning and compete alongside your friends! 🚀🍀`
+        );
+        return;
+      }
       const result = await processReferral({
         user: {
           id: userId,
