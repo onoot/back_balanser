@@ -51,24 +51,11 @@ export async function balanceRequest(req, res, next) {
     } catch (error) {
         console.error('Error forwarding request:', error.message);
 
-        // Логируем детали ошибки
-        if (error.response) {
-            console.error('Error response:', error.response);
-        }
-
+    
         if (res.headersSent) {
             // Если заголовки уже отправлены, передаём ошибку дальше
             return next(error);
-        }
-
-        // Если ошибка вызвана отсутствием ресурса (404)
-        if (error.response && error.response.status === 404) {
-            console.error(`Resource not found at ${targetUrl}`);
-            return res.status(404).send('Resource not found on target server.');
-        }
-
-        // Обработка других ошибок
-        const errorDetails = error.response ? error.response.data : error.message;
+        }        
         res.status(500).send(`Error forwarding request: ${errorDetails}`);
     }
 }
