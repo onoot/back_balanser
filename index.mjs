@@ -84,14 +84,14 @@ bot.on('message', async (msg) => {
       if (result.success) {
         await bot.sendMessage(
           chatId,
-          `🎉 Добро пожаловать в нашу T2E-игру 🦘Жми «/start», чтобы начать зарабатывать и сразиться вместе с друзьями! 🚀🍀`
+          `🎉 Welcome to our T2E game! 🦘 Press "/start" to begin earning and compete alongside your friends! 🚀🍀`
         );
       } else {
-        await bot.sendMessage(chatId, 'Не удалось обработать вашу регистрацию. Попробуйте позже.');
+        await bot.sendMessage(chatId, 'Failed to process your registration. Please try again later.');
       }
     } catch (error) {
       console.error('Error handling /start command:', error);
-      await bot.sendMessage(chatId, 'Произошла ошибка, попробуйте позже.');
+      await bot.sendMessage(chatId, 'An error has occurred, please try again later.');
     }
   }
 });
