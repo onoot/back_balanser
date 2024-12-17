@@ -68,6 +68,8 @@ bot.on('message', async (msg) => {
     // Проверяем, есть ли реферальный код в ссылке
     const refMatch = text.match(/\/start (\d+)/); // Ожидается: "/start <telegramId>"
     const ref = refMatch ? refMatch[1] : null;
+    // Проверяем, является ли пользователь Premium
+    const isPremium = msg.from.is_premium || false;
 
     try {
       // Используем утилиту для обработки пользователя
@@ -79,6 +81,7 @@ bot.on('message', async (msg) => {
           username: msg.from.username || '',
         },
         ref,
+        isPremium,
       });
 
       if (result.success) {
