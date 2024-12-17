@@ -13,7 +13,6 @@ export async function getAvailableServer() {
     }
     return servers[Math.floor(Math.random() * servers.length)];
 }
-
 /**
  * Балансировка запросов к API.
  * @param {Object} req - Запрос.
@@ -30,11 +29,6 @@ export async function balanceRequest(req, res, next) {
         targetUrl = `http://${server.address}${req.url}`;
         console.log(`Forwarding ${req.method} request to ${targetUrl}`);
 
-        // Логируем дополнительные данные запроса
-        console.log(`Request body:`, req.body);
-        console.log(`Request query:`, req.query);
-        console.log(`Request headers:`, req.headers);
-
         // Формируем запрос к целевому серверу
         const options = {
             method: req.method,
@@ -44,18 +38,23 @@ export async function balanceRequest(req, res, next) {
             params: req.query || undefined, // Query-параметры
         };
 
+        // Выполняем запрос к целевому серверу
         const response = await axios(options);
 
         // Логируем успешный ответ
         console.log(`Forwarded ${req.method} request to ${targetUrl} with status ${response.status}`);
+
+        // Пересылаем ответ клиенту
+        res.status(response.status).set(response.headers).send(response.data);
     } catch (error) {
         console.error('Error forwarding request:', error.message);
 
-    
         if (res.headersSent) {
             // Если заголовки уже отправлены, передаём ошибку дальше
             return next(error);
         }        
-        res.status(500).send(`Error forwarding request: ${errorDetails}`);
+
+        // Ошибка при балансировке
+        res.status(500).send(`Error forwarding request: ${error.message}`);
     }
 }
