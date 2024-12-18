@@ -89,7 +89,8 @@ const User = sequelize.define('User', {
   },
   daily_tasks: {
     type: DataTypes.JSON,
-    allowNull: true,
+    allowNull: false,
+    defaultValue: [],
   },
   combo_daily: {
     type: DataTypes.JSON,
