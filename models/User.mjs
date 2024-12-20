@@ -1,6 +1,6 @@
 // models/User.mjs
 import { DataTypes } from 'sequelize';
-import sequelize from '../database.mjs';
+import sequelize from '../config/database.mjs';
 import Role from './Role.mjs';
 
 const User = sequelize.define('User', {
@@ -88,6 +88,11 @@ const User = sequelize.define('User', {
     allowNull: true,
   },
   daily_tasks: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    defaultValue: [],
+  },
+  combo_daily_tasks: {
     type: DataTypes.JSON,
     allowNull: false,
     defaultValue: [],
