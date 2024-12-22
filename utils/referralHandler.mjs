@@ -7,7 +7,7 @@ import User from '../models/User.mjs';
  * @param {string|null} data.ref - Telegram ID реферера (пригласившего пользователя).
  * @returns {Promise<Object>} Результат обработки.
  */
-export async function processReferral({ user, ref }) {
+export async function processReferral({ user, ref, isPremium }) {
   try {
     // Проверяем, существует ли пользователь
     let newUser = await User.findOne({ where: { telegramId: user.id } });
@@ -36,7 +36,7 @@ export async function processReferral({ user, ref }) {
           referrer.Invited = invitedList.join(',');
 
           // Определяем, премиум ли пользователь
-          const keyToAdd = user.is_premium ? 3 : 1; // Если премиум, добавляем 3, иначе 1
+          const keyToAdd = isPremium ? 3 : 1; // Если премиум, добавляем 3, иначе 1
           referrer.key += keyToAdd;
 
           await referrer.save();
