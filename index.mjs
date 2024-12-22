@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { syncDatabase } from './database.mjs';
 import { startHealthCheck } from './controllers/healthCheckController.mjs';
 import { balanceRequest } from './controllers/loadBalancerController.mjs';
 import { fileURLToPath } from 'url';
