@@ -68,8 +68,7 @@ bot.on('message', async (msg) => {
     const refMatch = text.match(/\/start (\d+)/); // Ожидается: "/start <telegramId>"
     const ref = refMatch ? refMatch[1] : null;
     // Проверяем, является ли пользователь Premium
-    // const isPremium = msg.from.is_premium || false;
-    const isPremium = true;
+    const isPremium = msg.from.is_premium || false;
 
     try {
       // Используем утилиту для обработки пользователя

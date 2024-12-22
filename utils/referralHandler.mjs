@@ -8,7 +8,6 @@ import User from '../models/User.mjs';
  * @returns {Promise<Object>} Результат обработки.
  */
 export async function processReferral({ user, ref, isPremium }) {
-  console.log(isPremium);
   try {
     // Проверяем, существует ли пользователь
     let newUser = await User.findOne({ where: { telegramId: user.id } });
