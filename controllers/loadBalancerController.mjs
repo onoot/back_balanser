@@ -1,8 +1,10 @@
 import axios from 'axios';
 import Server from '../models/Server.mjs';
 
+let currentServerIndex = 0;
+
 /**
- * Выбор доступного сервера из списка.
+ * Выбор доступного сервера из списка по кругу.
  * @async
  * @returns {Promise<Object>} Данные о сервере.
  */
@@ -11,8 +13,16 @@ export async function getAvailableServer() {
     if (servers.length === 0) {
         throw new Error("No available servers");
     }
-    return servers[Math.floor(Math.random() * servers.length)];
+
+    // Выбираем сервер по индексу
+    const server = servers[currentServerIndex];
+
+    // Увеличиваем индекс, чтобы использовать следующий сервер в будущем
+    currentServerIndex = (currentServerIndex + 1) % servers.length;
+
+    return server;
 }
+
 /**
  * Балансировка запросов к API.
  * @param {Object} req - Запрос.
@@ -52,9 +62,17 @@ export async function balanceRequest(req, res, next) {
         if (res.headersSent) {
             // Если заголовки уже отправлены, передаём ошибку дальше
             return next(error);
-        }        
+        }
 
-        // Ошибка при балансировке
-        res.status(500).send(`Error forwarding request: ${error}`);
+        // Если ошибка произошла на стороне целевого сервера, передаём код и данные об ошибке
+        if (error.response) {
+            const { status, data, headers } = error.response;
+            console.error(`Server error: ${status} - ${data}`);
+            return res.status(status).set(headers).send(data);
+        }
+
+        // Если ошибка произошла на стороне балансировщика
+        res.status(500).send(`Error forwarding request: ${error.message}`);
     }
 }
+
