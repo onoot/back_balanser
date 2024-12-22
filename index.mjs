@@ -42,8 +42,8 @@ app.use('/api', (req, res, next) => {
 });
 
 // Обработка всех остальных запросов
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, './public/ton.json'));
+app.get('/manifest.json', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/manifest.json'));
 });
 
 // Обработка ошибок
