@@ -28,10 +28,10 @@ const __dirname = path.dirname(__filename);
 const buildPath = path.join(__dirname, 'build');
 app.use(express.static(buildPath));
 
-const sslOptions = {
-    key: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.key'),
-    cert: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.crt'),
-};
+// const sslOptions = {
+//     key: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.key'),
+//     cert: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.crt'),
+// };
 
 // Запускаем опрос серверов
 startHealthCheck();
