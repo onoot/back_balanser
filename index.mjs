@@ -28,10 +28,10 @@ const __dirname = path.dirname(__filename);
 const buildPath = path.join(__dirname, 'build');
 app.use(express.static(buildPath));
 
-// const sslOptions = {
-//     key: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.key'),
-//     cert: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.crt'),
-// };
+const sslOptions = {
+    key: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.key'),
+    cert: fs.readFileSync('/home/kaseev/conf/web/tongaroo.fun/ssl/tongaroo.fun.crt'),
+};
 
 // Запускаем опрос серверов
 startHealthCheck();
@@ -44,6 +44,10 @@ app.use('/api', (req, res, next) => {
 // Обработка всех остальных запросов
 app.get('/manifest.json', (req, res) => {
   res.sendFile(path.join(__dirname, './public/manifest.json'));
+});
+
+app.get('/IMG_2330.PNG', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/IMG_2330.PNG'));
 });
 
 // Обработка ошибок

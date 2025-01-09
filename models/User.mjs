@@ -97,6 +97,11 @@ const User = sequelize.define('User', {
     allowNull: false,
     defaultValue: [],
   },
+  win_combo: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    defaultValue: [],
+  },
   roleId: {
     type: DataTypes.INTEGER,
     references: {
