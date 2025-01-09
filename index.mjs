@@ -46,7 +46,7 @@ app.get('/manifest.json', (req, res) => {
   res.sendFile(path.join(__dirname, './public/manifest.json'));
 });
 
-app.get('/IMG_2330.PNG', (req, res) => {
+app.get('/img', (req, res) => {
   res.sendFile(path.join(__dirname, './public/IMG_2330.PNG'));
 });
 
