@@ -63,6 +63,8 @@ app.use((err, req, res, next) => {
       res.status(500).send("Internal Server Error");
   }
 });
+
+
 const messqgeHandler = async (msg) => {
   try {
     const ms = await Message.findAll({
@@ -112,7 +114,7 @@ bot.on('message', async (msg) => {
       if (result.success) {
         await bot.sendMessage(
           chatId,
-          `🎉 Welcome to our T2E game! 🦘 Press "/start" to begin earning and compete alongside your friends! 🚀🍀`
+          messqgeHandler
         );
       } else {
         await bot.sendMessage(chatId, 'Failed to process your registration. Please try again later.');
