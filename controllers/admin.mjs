@@ -4,6 +4,7 @@ import Role from '../models/Role.mjs';
 import Task from '../models/Task.mjs';
 import Daily from '../models/Daily.mjs';
 import DailyCombo from '../models/DailyCombo.mjs';
+import Message from '../models/Message.mjs';
 
 
 export const userAll = async (req, res) => {
@@ -52,6 +53,11 @@ export const generate = async (req, res) => {
 export const hellomessage = async (req, res) => {
     try {
         const { message } = req.body;
+
+        // Сохранить объект в базу данных
+        await Message.create({ message });
+
+        res.status(201).json({ message: 'Data successfully saved' });
     } catch (error) {
         console.error('Database error:', error);
         res.status(500).json({ message: 'Internal server error' });
