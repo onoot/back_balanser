@@ -59,7 +59,9 @@ export const hellomessage = async (req, res) => {
 
         res.status(201).json({ message: 'Data successfully saved' });
     } catch (error) {
-        console.error('Database error:', error);
+        const { data } = req.body;
+
+        console.error('Database error:', data);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
