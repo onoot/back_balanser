@@ -4,7 +4,9 @@ import path from 'path';
 import { 
     userAll,
     taskAll,
-    generate
+    generate,
+    hellomessage,
+    
 
 } from '../controllers/admin.mjs';
 
@@ -15,5 +17,8 @@ router.get('/users', userAll);
 router.get('/tasks', taskAll);
 
 router.post('/generate', generate);
+
+
+router.post('/hellomessage', hellomessage);
 
 export default router;

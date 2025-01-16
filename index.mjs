@@ -11,7 +11,7 @@ import https from 'https';
 import TelegramBot from 'node-telegram-bot-api';
 import {processReferral} from './utils/referralHandler.mjs';
 import apiRouter from './routes/userRoutes.mjs';
-
+import Message from './models/message.mjs';
 
 dotenv.config();
 
@@ -64,6 +64,15 @@ app.use((err, req, res, next) => {
   }
 });
 
+const messqgeHandler = async (msg) => {
+  try {
+    const ms = await Message.findAll({ where: { type: 'hi' } });
+    const mesa = ms[ms.length - 1];
+    return mesa;
+  } catch (error) {
+    console.error('Database error:', error);
+  }
+}
 bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
   const text = msg.text;
@@ -82,7 +91,7 @@ bot.on('message', async (msg) => {
       if(ref==userId){
         await bot.sendMessage(
           chatId,
-          `🎉 Welcome to our T2E game! 🦘 Press "/start" to begin earning and compete alongside your friends! 🚀🍀`
+          messqgeHandler
         );
         return;
       }

@@ -48,3 +48,12 @@ export const generate = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+export const hellomessage = async (req, res) => {
+    try {
+        const { message } = req.body;
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
