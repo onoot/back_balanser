@@ -61,6 +61,7 @@ export const hellomessage = async (req, res) => {
     } catch (error) {
         const { data } = req.body;
 
+        console.error('Database error:', error);
         console.error('Database error:', data);
         res.status(500).json({ message: 'Internal server error' });
     }
