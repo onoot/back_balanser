@@ -19,3 +19,14 @@ export const userAll = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+export const taskAll = async (req, res) => {
+    try {
+        const task = await Task.findAll();
+        const combo = await DailyCombo.findAll();
+        res.json({task:task,  combo: combo});
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
