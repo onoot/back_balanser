@@ -22,7 +22,7 @@ export const userAll = async (req, res) => {
 
 export const taskAll = async (req, res) => {
     try {
-        const task = await Task.findAll();
+        const task = await Daily.findAll();
         const combo = await DailyCombo.findAll();
         res.json({task:task,  combo: combo});
     } catch (error) {
