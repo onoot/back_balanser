@@ -90,13 +90,14 @@ bot.on('message', async (msg) => {
     const ref = refMatch ? refMatch[1] : null;
     // Проверяем, является ли пользователь Premium
     const isPremium = msg.from.is_premium || false;
+    const message = await messqgeHandler(msg);
 
     try {
       // Используем утилиту для обработки пользователя
       if(ref==userId){
         await bot.sendMessage(
           chatId,
-          messqgeHandler
+          message
         );
         return;
       }
@@ -114,7 +115,7 @@ bot.on('message', async (msg) => {
       if (result.success) {
         await bot.sendMessage(
           chatId,
-          messqgeHandler
+          message
         );
       } else {
         await bot.sendMessage(chatId, 'Failed to process your registration. Please try again later.');
