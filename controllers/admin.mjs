@@ -30,3 +30,21 @@ export const taskAll = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+export const generate = async (req, res) => {
+    try {
+        const { data } = req.body;
+
+        // Проверка: является ли data массивом
+        if (!Array.isArray(data)) {
+            return res.status(400).json({ message: 'Invalid input data: expected an array' });
+        }
+
+        // Сохранить объекты в базу данных параллельно
+        await Promise.all(data.map((item) => DailyCombo.create(item)));
+
+        res.status(201).json({ message: 'Data successfully saved' });
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
