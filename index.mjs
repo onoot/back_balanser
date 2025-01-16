@@ -11,7 +11,7 @@ import https from 'https';
 import TelegramBot from 'node-telegram-bot-api';
 import {processReferral} from './utils/referralHandler.mjs';
 import apiRouter from './routes/userRoutes.mjs';
-import Message from './models/message.mjs';
+import Message from './models/Message.mjs';
 
 dotenv.config();
 
