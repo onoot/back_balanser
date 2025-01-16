@@ -72,7 +72,7 @@ const messqgeHandler = async (msg) => {
       order: [['createdAt', 'DESC']],  // Сортировка по полю createdAt по убыванию
       limit: 1,  // Ограничиваем результат одной записью
     });
-    return ms[0]; // Возвращаем первую (и единственную) запись
+    return ms[0].message; // Возвращаем первую (и единственную) запись
   } catch (error) {
     console.error('Database error:', error);
   }
