@@ -49,20 +49,23 @@ export const generate = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
 export const hellomessage = async (req, res) => {
     try {
-        const { data } = req.body;
-
-        // Сохранить объект в базу данных
-        await Message.create({ data });
-
-        res.status(201).json({ message: 'Data successfully saved' });
+      // Получаем данные непосредственно из тела запроса
+      const { title, type, message } = req.body;
+  
+      // Проверка, что данные не пустые
+      if (!title || !type || !message) {
+        return res.status(400).json({ message: 'Title, type, and message are required' });
+      }
+  
+      // Сохранить объект в базу данных
+      await Message.create({ title, type, message });
+  
+      res.status(201).json({ message: 'Data successfully saved' });
     } catch (error) {
-        const { data } = req.body;
-
-        console.error('Database error:', error);
-        console.error('Database error:', data);
-        res.status(500).json({ message: 'Internal server error' });
+      console.error('Database error:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-};
+  };
+  
