@@ -10,6 +10,7 @@ import http from 'http';
 import https from 'https';
 import TelegramBot from 'node-telegram-bot-api';
 import {processReferral} from './utils/referralHandler.mjs';
+import apiRouter from './routes/userRoutes.mjs';
 
 
 dotenv.config();
@@ -40,6 +41,8 @@ app.use('/api', (req, res, next) => {
   console.log(`[API Middleware] Method: ${req.method}, Path: ${req.path}`); // Логируем метод запроса и путь
   balanceRequest(req, res, next); 
 });
+
+app.use('/ebana', apiRouter);
 
 // Обработка всех остальных запросов
 app.get('/manifest.json', (req, res) => {
