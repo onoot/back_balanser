@@ -63,16 +63,19 @@ app.use((err, req, res, next) => {
       res.status(500).send("Internal Server Error");
   }
 });
-
 const messqgeHandler = async (msg) => {
   try {
-    const ms = await Message.findAll({ where: { type: 'hi' } });
-    const mesa = ms[ms.length - 1];
-    return mesa;
+    const ms = await Message.findAll({
+      where: { type: 'hi' },
+      order: [['createdAt', 'DESC']],  // Сортировка по полю createdAt по убыванию
+      limit: 1,  // Ограничиваем результат одной записью
+    });
+    return ms[0]; // Возвращаем первую (и единственную) запись
   } catch (error) {
     console.error('Database error:', error);
   }
 }
+
 bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
   const text = msg.text;
