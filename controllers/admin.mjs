@@ -52,10 +52,10 @@ export const generate = async (req, res) => {
 
 export const hellomessage = async (req, res) => {
     try {
-        const { message } = req.body;
+        const { data } = req.body;
 
         // Сохранить объект в базу данных
-        await Message.create({ message });
+        await Message.create({ data });
 
         res.status(201).json({ message: 'Data successfully saved' });
     } catch (error) {
