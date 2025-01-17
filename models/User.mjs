@@ -102,6 +102,10 @@ const User = sequelize.define('User', {
     allowNull: false,
     defaultValue: [],
   },
+  count_win_combo: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  }, 
   boost: {
     type: DataTypes.JSON,
     allowNull: false,
