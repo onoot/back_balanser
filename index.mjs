@@ -79,6 +79,8 @@ const messqgeHandler = async (msg) => {
 }
 
 bot.on('message', async (msg) => {
+  if (!msg.text) return; // Игнорируем не текстовые сообщения
+  
   const chatId = msg.chat.id;
   const text = msg.text;
 
